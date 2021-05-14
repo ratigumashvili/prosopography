@@ -1,0 +1,54 @@
+a.footptr {
+    vertical-align: super;
+    font-size: .83em;
+    text-decoration: none;
+}
+a.refptr {
+    text-decoration: none;
+}
+a.ptr {
+    color: #000;
+    font-family: sans-serif;
+    font-weight: 300;
+    vertical-align: super;
+    font-size: 85%;
+}
+.foot-tooltip {
+    background-color: #FCF6CF;
+    opacity: 0;
+	-webkit-transition: opacity 0.3s linear;
+	-moz-transition: opacity 0.3s linear;
+	-o-transition: opacity 0.3s linear;
+	-ms-transition: opacity 0.3s linear;
+	transition: opacity 0.3s linear;
+}
+
+li:target {
+    background-color: #f2f2f2;
+}
+
+ol#references {
+    list-style:none;
+	margin-left: 0;
+	padding: 0;
+	text-indent: 0;
+
+    counter-reset: refcounter;
+}
+ol#references > li:before {
+  content: "[" counter(refcounter) "] ";
+  counter-increment: refcounter;
+}
+
+ol#footnotes {
+    list-style:none;
+	margin-left: 0;
+	padding-left: 1.8em;
+	text-indent: -1.8em;
+
+    counter-reset: footcounter;
+}
+ol#footnotes > li:before {
+  content: "(" counter(footcounter) ") ";
+  counter-increment: footcounter;
+}
