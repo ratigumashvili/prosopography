@@ -452,77 +452,7 @@
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
-    <script src="js/typeahead.bundle.js"></script>
-
-
-
-
-
-
-
-
-    <script>
-        // Get current year
-        document.getElementById("currentYear").innerHTML = new Date().getFullYear();
-        document.querySelector(".current-year-eng").innerHTML = new Date().getFullYear();
-
-        // List & Grid views
-        $(document).ready(function() {
-            $('#list').click(function(event){
-                event.preventDefault();
-                $('#recordlist').removeClass('card-columns');
-                $('#recordlist').addClass('row');
-                $('#recordlist .item').addClass('col-lg-12 mb-3');
-            });
-            $('#grid').click(function(event){
-                event.preventDefault();
-                $('#recordlist').removeClass('row');
-                $('#recordlist').addClass('card-columns');
-                $('#recordlist .item').removeClass('col-lg-12 mb-3');
-            });
-
-            // Typehead
-
-            var places = ['თბილისი', 'თელავი', 'თავლა', 'თაბორი', 'ბათუმი', 'ქუთაისი', 'ხაშური', 'გორი', 'მცხეთა', 'სამგორი', 'კუკია', 'ლაილაში', 'უდე', 'ახალციხე', 'ვარაზისხევი'];
-            var places = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.whitespace,
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                local: places
-            });
-            $('.typeahead').typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            },
-            {
-                name: 'places',
-                source: places
-            });
-        });
-    </script>
-
-    <script>
-    // Typehead loaded from JSON
-
-    //   var countries = new Bloodhound({
-    //   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-    //   queryTokenizer: Bloodhound.tokenizers.whitespace,
-    //   limit: 10,
-    //   prefetch: {
-    //       url: 'records/countries.json',
-    //       filter: function(list) {
-    //       return $.map(list, function(country) { return { name: country }; });
-    //       }
-    //     }
-    //   });
-    //     countries.initialize();
-    //     $('#prefetch .typeahead').typeahead(null, {
-    //     name: 'countries',
-    //     displayKey: 'name',
-    //     source: countries.ttAdapter()
-    //   });
-    </script>
+    <script src="js/main.js"></script>
 
 </body>
 </html>
