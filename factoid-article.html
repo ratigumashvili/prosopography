@@ -318,7 +318,63 @@
     <script src="js/editorial-menu.js"></script>
     <script src="js/tooltip.js"></script>
     <script src="js/jquery.glossarize.js"></script>
-    <script src="js/main.js"></script>
+    
+    <script>
+
+        $(function(){
+            $('body').glossarizer({
+            sourceURL: 'records/glossary.json',
+            callback: function(){
+                new tooltip();
+            }
+            });
+        });
+
+        // Get current year
+        document.getElementById("currentYear").innerHTML = new Date().getFullYear();
+        document.querySelector(".current-year-eng").innerHTML = new Date().getFullYear();
+
+        // Generate current URL in #current-url
+        document.getElementById("current-url").innerHTML = window.location.href;
+        //Generate current date in current-date
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = mm + '/' + dd + '/' + yyyy;
+        document.getElementById("current-date").innerHTML = (today);
+
+        // Send link by email
+        function emailCurrentPage() {
+            window.location.href = "mailto:?subject=" + document.title + "&body=" + encodeURI(document.location);
+        }
+        // Display success while copying URL
+        function revealMessage() {
+            $("#copy-notification").addClass("d-block");
+        };
+
+        // Close alert
+        $(".close").click(function(){
+            $(this).parent().removeClass("d-block");
+        });
+        
+        // Function to execute copyToClipboard from ('#current-url') on button click
+        function copyToClipboard(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+
+            revealMessage();
+        }
+
+    </script>
+
+    
+    
+    
+
 
 </body>
 </html>

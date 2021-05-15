@@ -376,7 +376,47 @@
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    
+    
+    
+
+
+
+
+
+    
+
+
+
+
+    <script>
+        // Get current year
+        document.getElementById("currentYear").innerHTML = new Date().getFullYear();
+        document.querySelector(".current-year-eng").innerHTML = new Date().getFullYear();
+
+        // List & Grid views
+        $(document).ready(function() {
+            $('#list').click(function(event){
+                event.preventDefault();
+                $('#recordlist').removeClass('card-columns');
+                $('#recordlist').addClass('row');
+                $('#recordlist .item').addClass('col-lg-12 mb-3');
+            });
+            $('#grid').click(function(event){
+                event.preventDefault();
+                $('#recordlist').removeClass('row');
+                $('#recordlist').addClass('card-columns');
+                $('#recordlist .item').removeClass('col-lg-12 mb-3');
+            });
+        });
+    </script>
+
+    
+
+    
+    
+    
+
 
 </body>
 </html>

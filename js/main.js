@@ -22,11 +22,6 @@ function revealMessage() {
     $("#copy-notification").addClass("d-block");
 };
 
-// Close alert
-$(".close").click(function(){
-    $(this).parent().removeClass("d-block");
-});
-
 // Function to execute copyToClipboard from ('#current-url') on button click
 function copyToClipboard(element) {
     var $temp = $("<input>");
@@ -36,6 +31,11 @@ function copyToClipboard(element) {
     $temp.remove();
 
     revealMessage();
+}
+
+// Print
+function PrintPDF(){
+    window.print();
 }
 
 // TOC for about page
@@ -89,20 +89,123 @@ window.onload = function () {
     document.getElementById("toc").innerHTML += toc;
 };
 
-// Glossary
+jQuery(document).ready(function($){
+    // Datatable
+    $('.factoid-table-new').DataTable({
 
-$(function(){
-    $('body').glossarizer({
-    sourceURL: 'records/glossary.json',
-    callback: function(){
-        new tooltip();
-    }
+        lengthMenu: [
+            [5, 10, 25, 50, 100, -1],
+            [5, 10, 25, 50, 100, "ყველა"]
+        ],
+
+        order: [
+            [0, 'asc']
+        ],
+        
+        columnDefs: [{
+            targets: [1, 2, 3, 4, 5],
+            orderable: false
+        }],
+
+        language: {
+        processing:     "მუშავდება...",
+        search:         "ძიება ცხრილში:",
+        lengthMenu:    "აჩვენე _MENU_ ჩანაწერი",
+        info:           "ნაჩვენებია ჩანაწერები _START_–დან _END_–მდე, სულ _TOTAL_ ჩანაწერი",
+        infoEmpty:      "ნაჩვენებია ჩანაწერები 0–დან 0–მდე, სულ 0 ჩანაწერი",
+        infoFiltered:   "(გაფილტრული შედეგი _MAX_ ჩანაწერიდან)",
+        infoPostFix:    "",
+        loadingRecords: "იტვირთება...",
+        zeroRecords:    "არაფერი მოიძებნა",
+        emptyTable:     "მონაცემები არ არის ხელმისაწვდომი",
+        paginate: {
+            first:      "პირველი",
+            previous:   "წინა",
+            next:       "შემდეგი",
+            last:       "ბოლო"
+        },
+        Aria: {
+            SortAscending: ": სვეტის დალაგება ზრდის მიხედვით",
+            SortDescending: ": სვეტის დალაგება კლების მიხედვით"
+        },
+    },
+
+        initComplete: function () {
+        this.api().columns(1).every( function () {
+            var column = this;
+            var select = $('<select class="custom-select"><option value="">ყველა ტიპი</option></select>')
+                .appendTo( $(column.header()).empty() )
+                .on( 'change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        $(this).val()
+                    );
+                    column
+                        .search( val ? '^'+val+'$' : '', true, false )
+                        .draw();
+                } );
+            column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+            } );
+        } );
+    },
+
     });
-});
 
-// List & Grid views
+    // Table fullscreen  
+    $("#fsBtn").click(function(){
+        $("#tableHolder").toggleClass("table-fullscreen");
+    });
 
-$(document).ready(function() {
+    // Highlight search results in table
+
+    var table = $('#example').DataTable();
+    
+    table.on( 'draw', function () {
+        var body = $( table.table().body() );
+
+        body.unhighlight();
+        body.highlight( table.search() );  
+    });
+
+    // Change sources accordion text
+
+    $('.sources-occurencies-title').click(function(){
+        $(this).text(function(i,old){
+            return old=='აკეცვა' ?  'ჩვენება' : 'აკეცვა';
+        });
+    });
+
+    // Popover
+    $(function () {
+        $('[data-toggle="popover"]').popover({html:true})
+    });
+
+    // Font 1. Increase, 2. Decrease, 3. Reset
+    var size = $('.article-text').css('font-size');
+    $("#resetFont").click(function(){
+        $('.article-text').css('font-size', size);
+        return false;
+    });
+    $("#increaseFont").click(function() {
+        var size = $('.article-text').css('font-size');
+        $('.article-text').css('font-size', parseInt(size)+2);
+        return false;
+    });
+    $("#decreaseFont").click(function() {
+        var size = $('.article-text').css('font-size');
+        $('.article-text').css('font-size', parseInt(size)-2);
+        return false;
+    });
+
+    // Map in modal
+    $('#locationMap').on('show.bs.modal', function (e) {
+        setTimeout(function () {
+        map.invalidateSize();
+        }, 200);
+    });
+
+    // List & Grid view
+
     $('#list').click(function(event){
         event.preventDefault();
         $('#recordlist').removeClass('card-columns');
@@ -125,146 +228,40 @@ $(document).ready(function() {
         }, 200);
     });
 
-});
+    // Glossary
 
-// Datepicker
-
-$("#datepicker-from").datepicker({
-    startDate: '1800',
-    endDate: '1956',
-    startView: '1800',
-    format: "yyyy",
-    viewMode: "years", 
-    minViewMode: "years"
-});
-
-$("#datepicker-to").datepicker({
-    startDate: '1800',
-    endDate: '1956',
-    format: "yyyy",
-    viewMode: "years", 
-    minViewMode: "years"
-});
-
-// Highlight search results in table
-
-var table = $('#example').DataTable();
- 
-table.on( 'draw', function () {
-    var body = $( table.table().body() );
-
-    body.unhighlight();
-    body.highlight( table.search() );  
-});
-
-// Change sources accordion text
-$('.sources-occurencies-title').click(function(){
-    $(this).text(function(i,old){
-        return old=='აკეცვა' ?  'ჩვენება' : 'აკეცვა';
-    });
-});
-
-// Popover
-$(function () {
-    $('[data-toggle="popover"]').popover({html:true})
-})
-
-// Datatable
-$('.factoid-table-new').DataTable({
-
-    lengthMenu: [
-        [5, 10, 25, 50, 100, -1],
-        [5, 10, 25, 50, 100, "ყველა"]
-    ],
-
-    order: [
-        [0, 'asc']
-    ],
-    
-    columnDefs: [{
-        targets: [1, 2, 3, 4, 5],
-        orderable: false
-    }],
-
-    language: {
-    processing:     "მუშავდება...",
-    search:         "ძიება ცხრილში:",
-    lengthMenu:    "აჩვენე _MENU_ ჩანაწერი",
-    info:           "ნაჩვენებია ჩანაწერები _START_–დან _END_–მდე, სულ _TOTAL_ ჩანაწერი",
-    infoEmpty:      "ნაჩვენებია ჩანაწერები 0–დან 0–მდე, სულ 0 ჩანაწერი",
-    infoFiltered:   "(გაფილტრული შედეგი _MAX_ ჩანაწერიდან)",
-    infoPostFix:    "",
-    loadingRecords: "იტვირთება...",
-    zeroRecords:    "არაფერი მოიძებნა",
-    emptyTable:     "მონაცემები არ არის ხელმისაწვდომი",
-    paginate: {
-        first:      "პირველი",
-        previous:   "წინა",
-        next:       "შემდეგი",
-        last:       "ბოლო"
-    },
-    Aria: {
-        SortAscending: ": სვეტის დალაგება ზრდის მიხედვით",
-        SortDescending: ": სვეტის დალაგება კლების მიხედვით"
-    },
-},
-
-    initComplete: function () {
-    this.api().columns(1).every( function () {
-        var column = this;
-        var select = $('<select class="custom-select"><option value="">ყველა ტიპი</option></select>')
-            .appendTo( $(column.header()).empty() )
-            .on( 'change', function () {
-                var val = $.fn.dataTable.util.escapeRegex(
-                    $(this).val()
-                );
-                column
-                    .search( val ? '^'+val+'$' : '', true, false )
-                    .draw();
-            } );
-        column.data().unique().sort().each( function ( d, j ) {
-            select.append( '<option value="'+d+'">'+d+'</option>' )
-        } );
-    } );
-},
-
-});
-
-// Table fullscreen  
-
-$(document).ready(function(){
-    $("#fsBtn").click(function(){
-        $("#tableHolder").toggleClass("table-fullscreen");
+    $(function(){
+        $('body').glossarizer({
+        sourceURL: 'records/glossary.json',
+        callback: function(){
+            new tooltip();
+        }
         });
+    });
+
+    // Datepicker
+
+    $("#datepicker-from").datepicker({
+        startDate: '1800',
+        endDate: '1956',
+        startView: '1800',
+        format: "yyyy",
+        viewMode: "years", 
+        minViewMode: "years"
+    });
+
+    $("#datepicker-to").datepicker({
+        startDate: '1800',
+        endDate: '1956',
+        format: "yyyy",
+        viewMode: "years", 
+        minViewMode: "years"
+    });
+
+    // Close alert
+
+    $(".close").click(function(){
+        $(this).parent().removeClass("d-block");
+    });
+
 });
-
-// Map in modal
-$('#locationMap').on('show.bs.modal', function (e) {
-    setTimeout(function () {
-    map.invalidateSize();
-    }, 200);
-})
-
-// Font 1. Increase, 2. Decrease, 3. Reset
-$(document).ready(function() {
-    var size = $('.article-text').css('font-size');
-    $("#resetFont").click(function(){
-        $('.article-text').css('font-size', size);
-        return false;
-    });
-    $("#increaseFont").click(function() {
-        var size = $('.article-text').css('font-size');
-        $('.article-text').css('font-size', parseInt(size)+2);
-        return false;
-    });
-    $("#decreaseFont").click(function() {
-        var size = $('.article-text').css('font-size');
-        $('.article-text').css('font-size', parseInt(size)-2);
-        return false;
-    });
-    });
-
-    // Print
-    function PrintPDF(){
-        window.print();
-    }
